@@ -98,9 +98,12 @@ export default class PluginRender {
     if (this.supportSrcdoc) {
       // srcdoc in unreliable in Chrome.
       // https://github.com/ghinda/jotted/issues/23
-      this.$resultFrame.contentWindow.document.open()
-      this.$resultFrame.contentWindow.document.write(this.frameContent)
-      this.$resultFrame.contentWindow.document.close()
+      this.$resultFrame.contentWindow.location.reload(true)
+      this.$resultFrame.onload = function () {
+        this.$resultFrame.contentWindow.document.open()
+        this.$resultFrame.contentWindow.document.write(this.frameContent)
+        this.$resultFrame.contentWindow.document.close()
+      }.bind(this)
     } else {
       // older browsers without iframe srcset support (IE9).
       this.$resultFrame.setAttribute('data-srcdoc', this.frameContent)
